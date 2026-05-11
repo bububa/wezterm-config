@@ -1,6 +1,21 @@
+local wezterm = require("wezterm")
 local gpu_adapters = require('utils.gpu-adapter')
 local backdrops = require('utils.backdrops')
 local colors = require('colors.custom')
+
+-- 控制打开窗口的位置，打开即居中
+wezterm.on("gui-startup", function(cmd)
+  local screen = wezterm.gui.screens().active
+  local ratio = 0.4
+  local width, height = screen.width * ratio, screen.height * ratio
+  local tab, pane, window = wezterm.mux.spawn_window {
+    position = {
+      x = (screen.width - width) / 2,
+      y = (screen.height - height) / 2,
+      origin = 'ActiveScreen' }
+  }
+  window:gui_window():set_inner_size(width, height)
+end)
 
 ---@type Config
 return {
@@ -31,7 +46,7 @@ return {
    -- tab bar
    enable_tab_bar = true,
    hide_tab_bar_if_only_one_tab = false,
-   use_fancy_tab_bar = false,
+   use_fancy_tab_bar = true,
    tab_max_width = 23,
    show_tab_index_in_tab_bar = false,
    switch_to_last_active_tab_when_closing_tab = true,
@@ -43,14 +58,19 @@ return {
    command_palette_rows = 25,
 
    -- window
+   -- 启动尺寸：避免全屏
+   initial_cols = 100,
+   initial_rows = 30,
    window_padding = {
-      left = 0,
-      right = 0,
-      top = 10,
-      bottom = 7.5,
+      left = 8,
+      right = 8,
+      top = 6,
+      bottom = 6,
    },
    adjust_window_size_when_changing_font_size = false,
    window_close_confirmation = 'NeverPrompt',
+   window_decorations = "RESIZE",
+   window_background_opacity = 0.90,
    window_frame = {
       active_titlebar_bg = '#090909',
       -- font = fonts.font,
