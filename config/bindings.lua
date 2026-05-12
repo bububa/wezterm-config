@@ -78,7 +78,7 @@ local keys = {
    { key = '0',          mods = mod.SUPER_REV, action = act.EmitEvent('tabs.reset-tab-title') },
 
    -- tab: hide tab-bar
-   { key = '9',          mods = mod.SUPER,     action = act.EmitEvent('tabs.toggle-tab-bar'), },
+   { key = '9',          mods = mod.SUPER_REV,     action = act.EmitEvent('tabs.toggle-tab-bar'), },
 
    -- window --
    -- window: spawn windows
@@ -228,6 +228,22 @@ local keys = {
       }),
    },
 }
+
+-- tabs: activate by number
+for i = 1, 8 do
+   table.insert(keys, {
+      key = tostring(i),
+      mods = mod.SUPER,
+      action = act.ActivateTab(i - 1),
+   })
+end
+
+-- SUPER+9 activates the last tab
+table.insert(keys, {
+   key = '9',
+   mods = mod.SUPER,
+   action = act.ActivateTab(-1),
+})
 
 -- stylua: ignore
 ---@type table<string, Key[]>
